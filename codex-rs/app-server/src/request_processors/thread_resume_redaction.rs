@@ -80,6 +80,7 @@ mod tests {
                 id: "mcp-1".to_string(),
                 server: "docs".to_string(),
                 tool: "lookup".to_string(),
+                tool_title: None,
                 status: McpToolCallStatus::Completed,
                 arguments: serde_json::json!({"secret":"argument"}),
                 app_context: Some(McpToolCallAppContext {
@@ -137,6 +138,7 @@ mod tests {
                 id: "mcp-1".to_string(),
                 server: "docs".to_string(),
                 tool: "lookup".to_string(),
+                tool_title: None,
                 status: McpToolCallStatus::Completed,
                 arguments: JsonValue::String(REDACTED_PAYLOAD.to_string()),
                 app_context: Some(McpToolCallAppContext {
@@ -163,6 +165,7 @@ mod tests {
             id: "mcp-1".to_string(),
             server: "docs".to_string(),
             tool: "lookup".to_string(),
+            tool_title: None,
             status: McpToolCallStatus::Failed,
             arguments: serde_json::json!({"secret":"argument"}),
             app_context: None,
@@ -185,6 +188,7 @@ mod tests {
                 id: "mcp-1".to_string(),
                 server: "docs".to_string(),
                 tool: "lookup".to_string(),
+                tool_title: None,
                 status: McpToolCallStatus::Failed,
                 arguments: JsonValue::String(REDACTED_PAYLOAD.to_string()),
                 app_context: None,

@@ -653,6 +653,7 @@ async fn misalignment_buffered_replay_preserves_input_after_continuation() {
             id: "tool-call".into(),
             server: "sample".into(),
             tool: "inspect".into(),
+            tool_title: None,
             status: codex_app_server_protocol::McpToolCallStatus::InProgress,
             arguments: serde_json::json!({}),
             app_context: None,

@@ -396,6 +396,7 @@ pub(crate) struct HandledMcpToolCall {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct McpToolCallItemMetadata {
+    tool_title: Option<String>,
     connector_id: Option<String>,
     link_id: Option<String>,
     mcp_app_resource_uri: Option<String>,
@@ -414,6 +415,7 @@ impl McpToolCallItemMetadata {
             None
         };
         Self {
+            tool_title: metadata.and_then(|metadata| metadata.tool_title.clone()),
             connector_id: trusted_mcp_app_metadata
                 .and_then(|metadata| metadata.connector_id.clone()),
             link_id: trusted_mcp_app_metadata.and_then(|metadata| metadata.link_id.clone()),
@@ -1020,6 +1022,7 @@ async fn notify_mcp_tool_call_started(
         id: call_id.to_string(),
         server,
         tool,
+        tool_title: item_metadata.tool_title,
         arguments: arguments.unwrap_or(JsonValue::Null),
         connector_id: item_metadata.connector_id,
         mcp_app_resource_uri: item_metadata.mcp_app_resource_uri,
@@ -1066,6 +1069,7 @@ async fn notify_mcp_tool_call_completed(
         id: call_id.to_string(),
         server,
         tool,
+        tool_title: item_metadata.tool_title,
         arguments: arguments.unwrap_or(JsonValue::Null),
         connector_id: item_metadata.connector_id,
         mcp_app_resource_uri: item_metadata.mcp_app_resource_uri,

@@ -523,6 +523,7 @@ async fn paginated_mcp_history_caps_large_results() {
         id: "mcp-1".to_string(),
         server: "test".to_string(),
         tool: "large_result".to_string(),
+        tool_title: None,
         arguments: arguments.clone(),
         connector_id: None,
         mcp_app_resource_uri: None,

@@ -1418,6 +1418,12 @@
             "tool": {
               "type": "string"
             },
+            "toolTitle": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "type": {
               "enum": [
                 "mcpToolCall"

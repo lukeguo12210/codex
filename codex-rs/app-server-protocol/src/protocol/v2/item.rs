@@ -338,6 +338,9 @@ pub enum ThreadItem {
         id: String,
         server: String,
         tool: String,
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        #[ts(optional)]
+        tool_title: Option<String>,
         status: McpToolCallStatus,
         arguments: JsonValue,
         app_context: Option<McpToolCallAppContext>,
@@ -1043,6 +1046,7 @@ impl From<CoreTurnItem> for ThreadItem {
                     id: mcp.id,
                     server: mcp.server,
                     tool: mcp.tool,
+                    tool_title: mcp.tool_title,
                     status: McpToolCallStatus::from(mcp.status),
                     arguments: mcp.arguments,
                     app_context: mcp.connector_id.map(|connector_id| McpToolCallAppContext {

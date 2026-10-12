@@ -694,6 +694,7 @@ async fn mcp_elicitation_classification_survives_turn_completion_and_preserves_c
             id: item_id.to_string(),
             server: "server".to_string(),
             tool: "search".to_string(),
+            tool_title: None,
             status: McpToolCallStatus::Completed,
             arguments: json!({ "token": "synthetic-private-input" }),
             app_context: Some(McpToolCallAppContext {

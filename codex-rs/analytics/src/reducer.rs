@@ -4069,6 +4069,7 @@ mod tests {
                             id: keys[2].item_id.clone(),
                             server: "server".to_string(),
                             tool: "tool".to_string(),
+                            tool_title: None,
                             status: McpToolCallStatus::Failed,
                             arguments: serde_json::json!({}),
                             app_context: None,

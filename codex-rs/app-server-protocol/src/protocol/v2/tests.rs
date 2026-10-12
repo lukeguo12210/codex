@@ -3574,6 +3574,7 @@ fn core_turn_item_into_thread_item_converts_supported_variants() {
         id: "mcp-1".to_string(),
         server: "server".to_string(),
         tool: "tool".to_string(),
+        tool_title: None,
         arguments: json!({"arg": "value"}),
         connector_id: Some("calendar".to_string()),
         mcp_app_resource_uri: Some("app://connector".to_string()),
@@ -3595,6 +3596,7 @@ fn core_turn_item_into_thread_item_converts_supported_variants() {
             id: "mcp-1".to_string(),
             server: "server".to_string(),
             tool: "tool".to_string(),
+            tool_title: None,
             status: McpToolCallStatus::InProgress,
             arguments: json!({"arg": "value"}),
             app_context: Some(McpToolCallAppContext {
@@ -3617,7 +3619,8 @@ fn core_turn_item_into_thread_item_converts_supported_variants() {
     let completed_mcp_tool_call_item = TurnItem::McpToolCall(McpToolCallItem {
         id: "mcp-2".to_string(),
         server: "server".to_string(),
-        tool: "tool".to_string(),
+        tool: "capabilities_search".to_string(),
+        tool_title: Some("Aident Capabilities Search".to_string()),
         arguments: JsonValue::Null,
         connector_id: None,
         mcp_app_resource_uri: None,
@@ -3643,7 +3646,8 @@ fn core_turn_item_into_thread_item_converts_supported_variants() {
         ThreadItem::McpToolCall {
             id: "mcp-2".to_string(),
             server: "server".to_string(),
-            tool: "tool".to_string(),
+            tool: "capabilities_search".to_string(),
+            tool_title: Some("Aident Capabilities Search".to_string()),
             status: McpToolCallStatus::Completed,
             arguments: JsonValue::Null,
             app_context: None,
@@ -3663,11 +3667,12 @@ fn core_turn_item_into_thread_item_converts_supported_variants() {
 }
 
 #[test]
-fn mcp_tool_call_app_context_serializes_connector_id() {
+fn mcp_tool_call_serializes_app_context_and_title() {
     let item = ThreadItem::McpToolCall {
         id: "mcp-1".to_string(),
         server: "codex_apps".to_string(),
         tool: "calendar.create_event".to_string(),
+        tool_title: Some("Calendar Create Event".to_string()),
         status: McpToolCallStatus::InProgress,
         arguments: json!({}),
         app_context: Some(McpToolCallAppContext {
@@ -3686,13 +3691,15 @@ fn mcp_tool_call_app_context_serializes_connector_id() {
         duration_ms: None,
     };
 
+    let mut serialized = serde_json::to_value(item).expect("MCP tool call should serialize");
     assert_eq!(
-        serde_json::to_value(item).expect("MCP tool call should serialize"),
+        serialized,
         json!({
             "type": "mcpToolCall",
             "id": "mcp-1",
             "server": "codex_apps",
             "tool": "calendar.create_event",
+            "toolTitle": "Calendar Create Event",
             "status": "inProgress",
             "arguments": {},
             "appContext": {
@@ -3711,6 +3718,16 @@ fn mcp_tool_call_app_context_serializes_connector_id() {
             "durationMs": null,
         })
     );
+    serialized
+        .as_object_mut()
+        .expect("MCP tool call should be an object")
+        .remove("toolTitle");
+    let ThreadItem::McpToolCall { tool_title, .. } =
+        serde_json::from_value(serialized).expect("older MCP tool calls should deserialize")
+    else {
+        panic!("expected MCP tool call");
+    };
+    assert_eq!(tool_title, None);
 }
 
 #[test]

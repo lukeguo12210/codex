@@ -5457,6 +5457,7 @@ class McpToolCallThreadItem(BaseModel):
     server: str
     status: McpToolCallStatus
     tool: str
+    tool_title: Annotated[str | None, Field(alias="toolTitle")] = None
     type: Annotated[Literal["mcpToolCall"], Field(title="McpToolCallThreadItemType")]
 
 
