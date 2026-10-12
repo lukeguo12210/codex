@@ -40,6 +40,7 @@ fn mcp_item(server: &str, id: &str) -> ThreadItem {
         id: id.to_string(),
         server: server.to_string(),
         tool: "js".to_string(),
+        tool_title: None,
         status: McpToolCallStatus::Completed,
         arguments: json!({"title": format!("Inspect page {id}"), "code": "await cua.getState()"}),
         app_context: None,

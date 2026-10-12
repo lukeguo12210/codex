@@ -100,6 +100,7 @@ fn mcp_tool_call_result_preserves_meta_in_jsonl_event() {
                 id: "mcp-1".to_string(),
                 server: "search service".to_string(),
                 tool: "web_run".to_string(),
+                tool_title: None,
                 status: McpToolCallStatus::Completed,
                 arguments: json!({"search_query": [{"q": "OpenAI Codex CLI documentation"}]}),
                 app_context: None,

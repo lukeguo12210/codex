@@ -797,6 +797,7 @@ impl ThreadHistoryBuilder {
             id: payload.call_id.clone(),
             server: payload.invocation.server.clone(),
             tool: payload.invocation.tool.clone(),
+            tool_title: payload.tool_title.clone(),
             status: McpToolCallStatus::InProgress,
             arguments: payload
                 .invocation
@@ -855,6 +856,7 @@ impl ThreadHistoryBuilder {
             id: payload.call_id.clone(),
             server: payload.invocation.server.clone(),
             tool: payload.invocation.tool.clone(),
+            tool_title: payload.tool_title.clone(),
             status,
             arguments: payload
                 .invocation
@@ -3176,6 +3178,7 @@ mod tests {
                     tool: "lookup".into(),
                     arguments: Some(serde_json::json!({"id":"123"})),
                 },
+                tool_title: None,
                 connector_id: None,
                 mcp_app_resource_uri: None,
                 mcp_app_ui: None,
@@ -3239,6 +3242,7 @@ mod tests {
                 id: "mcp-1".into(),
                 server: "docs".into(),
                 tool: "lookup".into(),
+                tool_title: None,
                 status: McpToolCallStatus::Failed,
                 arguments: serde_json::json!({"id":"123"}),
                 app_context: None,
@@ -3275,6 +3279,7 @@ mod tests {
                     tool: "lookup".into(),
                     arguments: Some(serde_json::json!({"id":"123"})),
                 },
+                tool_title: Some("Look up event".into()),
                 connector_id: Some("calendar".into()),
                 mcp_app_resource_uri: Some("ui://widget/lookup.html".into()),
                 mcp_app_ui: None,
@@ -3310,6 +3315,7 @@ mod tests {
                 id: "mcp-1".into(),
                 server: "docs".into(),
                 tool: "lookup".into(),
+                tool_title: Some("Look up event".into()),
                 status: McpToolCallStatus::Completed,
                 arguments: serde_json::json!({"id":"123"}),
                 app_context: Some(McpToolCallAppContext {
@@ -3713,6 +3719,7 @@ mod tests {
                 id: "mcp-1".into(),
                 server: "slack".into(),
                 tool: "search".into(),
+                tool_title: None,
                 arguments: serde_json::json!({"query": "incident"}),
                 connector_id: None,
                 mcp_app_resource_uri: None,

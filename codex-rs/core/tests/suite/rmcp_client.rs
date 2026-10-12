@@ -2956,6 +2956,7 @@ async fn stdio_image_responses_round_trip() -> anyhow::Result<()> {
                 tool: "image".to_string(),
                 arguments: Some(json!({})),
             },
+            tool_title: None,
             connector_id: None,
             mcp_app_resource_uri: None,
             mcp_app_ui: None,

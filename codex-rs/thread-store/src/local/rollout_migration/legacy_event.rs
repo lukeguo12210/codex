@@ -178,6 +178,7 @@ pub(super) fn completed_item(
                     id: event.call_id.clone(),
                     server: event.invocation.server.clone(),
                     tool: event.invocation.tool.clone(),
+                    tool_title: event.tool_title.clone(),
                     arguments: event
                         .invocation
                         .arguments

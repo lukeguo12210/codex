@@ -93,6 +93,7 @@ fn mcp_tool_call(id: &str, server: &str, status: McpToolCallStatus) -> TurnItem 
         id: id.to_string(),
         server: server.to_string(),
         tool: "create_thread".to_string(),
+        tool_title: None,
         arguments: serde_json::Value::Null,
         connector_id: None,
         mcp_app_resource_uri: None,

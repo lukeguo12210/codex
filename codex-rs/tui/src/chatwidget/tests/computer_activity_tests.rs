@@ -9,6 +9,7 @@ fn computer_item(
         id: id.to_string(),
         server: "cua_repl".to_string(),
         tool: "js".to_string(),
+        tool_title: None,
         status,
         arguments: json!({"title": format!("Inspect page {id}"), "code": "await cua.getState()"}),
         app_context: None,

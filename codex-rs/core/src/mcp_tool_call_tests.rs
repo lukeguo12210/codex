@@ -1404,6 +1404,7 @@ fn mcp_tool_call_item_metadata_only_trusts_codex_apps_identity() {
     assert_eq!(
         McpToolCallItemMetadata::from_tool_metadata(CODEX_APPS_MCP_SERVER_NAME, Some(&metadata),),
         McpToolCallItemMetadata {
+            tool_title: Some("Create a calendar event".to_string()),
             connector_id: Some("asdk_app_0123456789abcdef0123456789abcdef".to_string()),
             link_id: Some("link_fedcba9876543210fedcba9876543210".to_string()),
             mcp_app_resource_uri: None,
@@ -1417,6 +1418,7 @@ fn mcp_tool_call_item_metadata_only_trusts_codex_apps_identity() {
     assert_eq!(
         McpToolCallItemMetadata::from_tool_metadata("custom_server", Some(&metadata)),
         McpToolCallItemMetadata {
+            tool_title: Some("Create a calendar event".to_string()),
             connector_id: None,
             link_id: None,
             mcp_app_resource_uri: None,
@@ -1426,6 +1428,82 @@ fn mcp_tool_call_item_metadata_only_trusts_codex_apps_identity() {
             plugin_id: None,
             read_only_hint: Some(false),
         }
+    );
+}
+
+#[tokio::test]
+async fn mcp_tool_call_items_preserve_custom_tool_title_and_name() {
+    let (session, turn_context, rx_event) = make_session_and_context_with_rx().await;
+    let metadata = approval_metadata(
+        /*connector_id*/ None,
+        /*connector_name*/ None,
+        /*connector_description*/ None,
+        Some("Aident Capabilities Search"),
+        /*tool_description*/ None,
+    );
+    let item_metadata =
+        McpToolCallItemMetadata::from_tool_metadata("aident-loadout", Some(&metadata));
+    let invocation = McpInvocation {
+        server: "aident-loadout".to_string(),
+        tool: "capabilities_search".to_string(),
+        arguments: None,
+    };
+
+    notify_mcp_tool_call_started(
+        &session,
+        &turn_context,
+        "call-search",
+        invocation.clone(),
+        item_metadata.clone(),
+    )
+    .await;
+    let event = tokio::time::timeout(std::time::Duration::from_secs(1), rx_event.recv())
+        .await
+        .expect("tool call start timed out")
+        .expect("tool call start event");
+    let EventMsg::ItemStarted(started) = event.msg else {
+        panic!("expected ItemStarted event");
+    };
+    let TurnItem::McpToolCall(started) = started.item else {
+        panic!("expected MCP tool call item");
+    };
+    assert_eq!(started.tool, "capabilities_search");
+    assert_eq!(
+        started.tool_title.as_deref(),
+        Some("Aident Capabilities Search")
+    );
+
+    notify_mcp_tool_call_completed(
+        &session,
+        &turn_context,
+        "call-search",
+        invocation,
+        item_metadata,
+        std::time::Duration::from_millis(1),
+        Ok(CallToolResult {
+            content: Vec::new(),
+            structured_content: None,
+            is_error: None,
+            meta: None,
+        }),
+    )
+    .await;
+    let completed = loop {
+        let event = tokio::time::timeout(std::time::Duration::from_secs(1), rx_event.recv())
+            .await
+            .expect("tool call completion timed out")
+            .expect("tool call completion event");
+        if let EventMsg::ItemCompleted(completed) = event.msg {
+            break completed;
+        }
+    };
+    let TurnItem::McpToolCall(completed) = completed.item else {
+        panic!("expected MCP tool call item");
+    };
+    assert_eq!(completed.tool, "capabilities_search");
+    assert_eq!(
+        completed.tool_title.as_deref(),
+        Some("Aident Capabilities Search")
     );
 }
 
@@ -1443,6 +1521,7 @@ async fn mcp_tool_call_item_includes_app_identity() {
             arguments: None,
         },
         McpToolCallItemMetadata {
+            tool_title: Some("Create a calendar event".to_string()),
             connector_id: Some("asdk_app_0123456789abcdef0123456789abcdef".to_string()),
             link_id: Some("link_fedcba9876543210fedcba9876543210".to_string()),
             mcp_app_resource_uri: None,
@@ -1477,6 +1556,7 @@ async fn mcp_tool_call_item_includes_app_identity() {
     assert_eq!(item.plugin_id.as_deref(), Some("sample@test"));
     assert_eq!(item.app_name.as_deref(), Some("Calendar"));
     assert_eq!(item.action_name.as_deref(), Some("create_event"));
+    assert_eq!(item.tool_title.as_deref(), Some("Create a calendar event"));
     assert_eq!(item.read_only_hint, Some(false));
 }
 

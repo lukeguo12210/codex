@@ -1197,6 +1197,7 @@ async fn mcp_tool_call_hint_survives_mid_call_thread_read_and_resume() -> Result
         id: call_id.to_string(),
         server: TEST_SERVER_NAME.to_string(),
         tool: TEST_TOOL_NAME.to_string(),
+        tool_title: None,
         status: McpToolCallStatus::InProgress,
         arguments: json!({ "message": ELICITATION_TRIGGER_MESSAGE }),
         app_context: None,

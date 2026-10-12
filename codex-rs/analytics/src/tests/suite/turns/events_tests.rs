@@ -477,6 +477,7 @@ async fn turn_event_counts_completed_tool_items() {
         id: "mcp-1".to_string(),
         server: "server".to_string(),
         tool: "search".to_string(),
+        tool_title: None,
         status,
         arguments: json!({}),
         app_context: Some(McpToolCallAppContext {

@@ -451,6 +451,10 @@ pub struct McpToolCallItem {
     pub id: String,
     pub server: String,
     pub tool: String,
+    /// Display title from the invoked MCP tool descriptor; absent in older history.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub tool_title: Option<String>,
     pub arguments: serde_json::Value,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional)]
